@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kyle Idleman · Social Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1c2230;
+    --gray-900:#111827;
+    --gray-600:#6b7280;
+    --gray-400:#9ca3af;
+    --gray-200:#e5e7eb;
+    --gray-100:#f3f4f6;
+    --gray-50:#f9fafb;
+    --white:#ffffff;
+    --green:#15803d;
+    --green-bg:#eefbf2;
+    --red:#b91c1c;
+    --red-bg:#fdecec;
+    --brand:#a3242a;
+    --fb:#5b7fb5;
+    --ig:#b6608f;
+    --tiktok:#2fa39a;
+    --yt:#d1495b;
+    --radius:10px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Inter',system-ui,sans-serif;
+    background:var(--gray-50);
+    color:var(--gray-900);
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1180px;margin:0 auto;padding:32px 28px 80px;}
+
+  .header{display:flex;justify-content:space-between;align-items:flex-end;padding-bottom:20px;border-bottom:1px solid var(--gray-200);margin-bottom:28px;}
+  .header .brand{display:flex;align-items:center;gap:12px;}
+  .brand-mark{width:38px;height:38px;border-radius:50%;background:var(--brand);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;flex-shrink:0;}
+  .header h1{font-size:20px;font-weight:700;margin:0;letter-spacing:-0.2px;}
+  .header .sub{font-size:13px;color:var(--gray-600);margin-top:2px;}
+  .header .period{text-align:right;font-size:12.5px;color:var(--gray-600);}
+  .header .period strong{display:block;color:var(--ink);font-size:13px;font-weight:600;}
+
+  h2.section-title{font-size:15px;font-weight:700;margin:0 0 4px;letter-spacing:-0.1px;}
+  p.section-sub{font-size:12.5px;color:var(--gray-600);margin:0 0 16px;}
+  .section{margin-bottom:36px;}
+
+  .exec-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+  .exec-card{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius);padding:18px 18px 20px;}
+  .exec-card .tag{font-size:11px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;margin-bottom:8px;display:inline-block;padding:3px 9px;border-radius:20px;}
+  .tag-win{color:var(--green);background:var(--green-bg);}
+  .tag-opp{color:#92610a;background:#fef6e6;}
+  .tag-action{color:#1d4ed8;background:#eaf1fd;}
+  .exec-card p{font-size:13.5px;line-height:1.55;color:var(--gray-900);margin:0;}
+
+  .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+  .kpi-card{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius);padding:16px 18px;}
+  .kpi-label{font-size:12px;color:var(--gray-600);font-weight:600;margin-bottom:8px;}
+  .kpi-value{font-size:24px;font-weight:800;color:var(--ink);letter-spacing:-0.5px;}
+  .kpi-delta{font-size:12.5px;font-weight:700;margin-top:6px;display:inline-flex;align-items:center;gap:3px;}
+  .up{color:var(--green);} .down{color:var(--red);}
+  .kpi-prev{font-size:11.5px;color:var(--gray-400);margin-top:2px;}
+  .kpi-note{font-size:11px;color:var(--gray-400);margin-top:8px;font-style:italic;}
+
+  .table-scroll{overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius);overflow:hidden;}
+  thead th{text-align:left;font-size:11.5px;text-transform:uppercase;letter-spacing:0.4px;color:var(--gray-600);font-weight:700;padding:12px 16px;background:var(--gray-50);border-bottom:1px solid var(--gray-200);}
+  tbody td{padding:13px 16px;font-size:13.5px;border-bottom:1px solid var(--gray-100);}
+  tbody tr:last-child td{border-bottom:none;}
+  tbody tr.total-row td{font-weight:700;background:var(--gray-50);}
+  .net-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;}
+  .dot-fb{background:var(--fb);} .dot-ig{background:var(--ig);}
+  .cell-muted{color:var(--gray-400);}
+  .best{background:var(--green-bg);font-weight:700;}
+
+  .chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+  .chart-card{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius);padding:18px 20px;}
+  .chart-card h3{font-size:13px;font-weight:700;margin:0 0 14px;}
+  .bar-row{display:grid;grid-template-columns:78px 1fr 78px;align-items:center;gap:10px;margin-bottom:10px;}
+  .bar-label{font-size:12px;color:var(--gray-600);display:flex;align-items:center;}
+  .bar-track{background:var(--gray-100);border-radius:6px;height:12px;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:6px;}
+  .bar-value{font-size:12px;font-weight:700;text-align:right;color:var(--ink);}
+
+  .insight-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;}
+  .insight-card{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius);padding:18px 20px;}
+  .insight-card h3{font-size:13px;font-weight:700;margin:0 0 10px;}
+  .insight-card ul{margin:0;padding-left:18px;}
+  .insight-card li{font-size:12.8px;line-height:1.55;color:var(--gray-900);margin-bottom:8px;}
+  .h-win h3{color:var(--green);}
+  .h-opp h3{color:#92610a;}
+  .h-action h3{color:#1d4ed8;}
+
+  .gap-note{background:var(--white);border:1px solid var(--gray-200);border-radius:var(--radius);padding:18px 20px;font-size:12.8px;color:var(--gray-600);line-height:1.6;}
+  .gap-note strong{color:var(--gray-900);}
+
+  .callout{background:#fffdf5;border:1px solid #f0e3bd;border-radius:var(--radius);padding:16px 20px;font-size:12.8px;color:var(--gray-900);line-height:1.6;}
+  .callout strong{color:#92610a;}
+
+  footer{margin-top:40px;font-size:11.5px;color:var(--gray-400);text-align:center;}
+
+  @media (max-width:900px){
+    .exec-grid,.insight-grid,.chart-grid{grid-template-columns:1fr;}
+    .kpi-grid{grid-template-columns:1fr 1fr;}
+    .header{flex-direction:column;align-items:flex-start;gap:14px;}
+    .header .period{text-align:left;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="header">
+    <div class="brand">
+      <div class="brand-mark">KI</div>
+      <div>
+        <h1>Kyle Idleman</h1>
+        <div class="sub">Personal Accounts · Social Media Performance Dashboard</div>
+      </div>
+    </div>
+    <div class="period">
+      Reporting Period
+      <strong>Aug 11 – Aug 17, 2026</strong>
+      7 days, vs. Aug 4 – Aug 10
+    </div>
+  </div>
+
+  <!-- EXECUTIVE SUMMARY -->
+  <div class="section">
+    <div class="exec-grid">
+      <div class="exec-card">
+        <span class="tag tag-win">Biggest Win</span>
+        <p>The strongest week on this account by a wide margin. Net audience growth hit 2,257, four times last week's 564, with Facebook adding 1,956 alone. Impressions rose 59.6% to 341,782 and video views 32.5% to 154,484, all on 9 posts instead of 17.</p>
+      </div>
+      <div class="exec-card">
+        <span class="tag tag-opp">Biggest Opportunity</span>
+        <p>Engagement rate fell to 5.1% because reach grew far faster than engagement, which is what happens when one post travels widely. Post link clicks stayed at 8, so a week that reached 341,782 impressions and gained 2,257 followers sent almost no one anywhere.</p>
+      </div>
+      <div class="exec-card">
+        <span class="tag tag-action">Recommended Action</span>
+        <p>Find out what drove the Facebook spike and repeat the format. Two posts produced 248,479 impressions and 1,956 followers. With that much new audience arriving, this is the week to put a GMHC or Food Pack link in front of them.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPARISON BASIS -->
+  <div class="section">
+    <div class="callout">
+      <strong>Note on the export settings.</strong> This export was also set to compare against Aug 11 – 18, 2025 rather than the prior week, so every percentage inside the PDF is year over year. The KPI cards below were recalculated week over week against Aug 4 – Aug 10 for continuity. Treat the year-over-year figures with extra caution on this account: Instagram shows no 2025 comparison at all (Sprout returns a dash for Instagram views and engagement rate), which suggests the Instagram profile was not being tracked last August. That makes headline year-over-year numbers like audience up 68.5% and net growth up 1,735% partly an artifact of adding a second profile rather than real growth. To restore week-over-week comparisons, reset Sprout's compare window to the previous Monday through Sunday.
+    </div>
+  </div>
+
+  <!-- KPI CARDS -->
+  <div class="section">
+    <h2 class="section-title">KPI Scorecard</h2>
+    <p class="section-sub">Aug 11 – Aug 17, 2026 against the prior week. Facebook and Instagram combined.</p>
+    <div class="kpi-grid">
+
+      <div class="kpi-card">
+        <div class="kpi-label">Impressions</div>
+        <div class="kpi-value">341,782</div>
+        <div class="kpi-delta up">▲ 59.6%</div>
+        <div class="kpi-prev">Prior week: 214,136</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Engagements</div>
+        <div class="kpi-value">17,263</div>
+        <div class="kpi-delta up">▲ 6.4%</div>
+        <div class="kpi-prev">Prior week: 16,218</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Engagement Rate (per Impression)</div>
+        <div class="kpi-value">5.1%</div>
+        <div class="kpi-delta down">▼ 32.9%</div>
+        <div class="kpi-prev">Prior week: 7.6%</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Net Audience Growth</div>
+        <div class="kpi-value">2,257</div>
+        <div class="kpi-delta up">▲ 300.2%</div>
+        <div class="kpi-prev">Prior week: 564</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Total Audience</div>
+        <div class="kpi-value">138,717</div>
+        <div class="kpi-delta up">▲ 2.0%</div>
+        <div class="kpi-prev">Prior week: 135,971</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Video Views</div>
+        <div class="kpi-value">154,484</div>
+        <div class="kpi-delta up">▲ 32.5%</div>
+        <div class="kpi-prev">Prior week: 116,566</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Posts Published</div>
+        <div class="kpi-value">9</div>
+        <div class="kpi-delta down">▼ 47.1%</div>
+        <div class="kpi-prev">Prior week: 17</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Post Link Clicks</div>
+        <div class="kpi-value">8</div>
+        <div class="kpi-delta cell-muted">no change</div>
+        <div class="kpi-prev">Prior week: 8</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Impressions per Post</div>
+        <div class="kpi-value">37,976</div>
+        <div class="kpi-delta up">▲ 201.5%</div>
+        <div class="kpi-prev">Prior week: 12,596</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-label">Engagements per Post</div>
+        <div class="kpi-value">1,918</div>
+        <div class="kpi-delta up">▲ 101.1%</div>
+        <div class="kpi-prev">Prior week: 954</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- NETWORK BREAKDOWN -->
+  <div class="section">
+    <h2 class="section-title">Performance by Network</h2>
+    <p class="section-sub">Reach shown here is Sprout's Impressions metric. Kyle's managed accounts are Facebook and Instagram only.</p>
+    <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>Network</th>
+          <th>Audience</th>
+          <th>Net Growth</th>
+          <th>Posts Published</th>
+          <th>Impressions</th>
+          <th>Engagements</th>
+          <th>Engagement Rate</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="net-dot dot-fb"></span>Facebook (Kyle Idleman)</td>
+          <td>93,300</td>
+          <td class="up"><strong>+1,956</strong></td>
+          <td>2</td>
+          <td>248,479</td>
+          <td>11,525</td>
+          <td>4.6%</td>
+        </tr>
+        <tr>
+          <td><span class="net-dot dot-ig"></span>Instagram (kyleidleman)</td>
+          <td>45,417</td>
+          <td class="up">+301</td>
+          <td>7</td>
+          <td>93,303</td>
+          <td>5,738</td>
+          <td><strong>6.1%</strong></td>
+        </tr>
+        <tr class="total-row">
+          <td>Total</td>
+          <td>138,717</td>
+          <td class="up">+2,257</td>
+          <td>9</td>
+          <td>341,782</td>
+          <td>17,263</td>
+          <td>5.1%</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="kpi-note" style="margin-top:10px;">Facebook impressions rose from 56,623 to 248,479 week over week, a 339% jump on the same 2 posts, and it added 1,956 followers against 246 last week. Instagram now holds the higher engagement rate at 6.1% against Facebook's 4.6%, the first time that has happened in this series, because Facebook's reach grew much faster than its engagement.</p>
+  </div>
+
+  <!-- CHARTS -->
+  <div class="section">
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3>Impressions by Network</h3>
+        <div class="bar-row">
+          <div class="bar-label"><span class="net-dot dot-fb"></span>Facebook</div>
+          <div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--fb);"></div></div>
+          <div class="bar-value">248K</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span class="net-dot dot-ig"></span>Instagram</div>
+          <div class="bar-track"><div class="bar-fill" style="width:38%;background:var(--ig);"></div></div>
+          <div class="bar-value">93K</div>
+        </div>
+        <p class="kpi-note">Facebook accounted for 73% of all impressions from 2 of the week's 9 posts.</p>
+      </div>
+
+      <div class="chart-card">
+        <h3>Engagements by Network</h3>
+        <div class="bar-row">
+          <div class="bar-label"><span class="net-dot dot-fb"></span>Facebook</div>
+          <div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--fb);"></div></div>
+          <div class="bar-value">11.5K</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span class="net-dot dot-ig"></span>Instagram</div>
+          <div class="bar-track"><div class="bar-fill" style="width:50%;background:var(--ig);"></div></div>
+          <div class="bar-value">5.7K</div>
+        </div>
+        <p class="kpi-note">Facebook holds 66.8% of engagement, close to its usual share.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3>Video Views by Network</h3>
+        <div class="bar-row">
+          <div class="bar-label"><span class="net-dot dot-fb"></span>Facebook</div>
+          <div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--fb);"></div></div>
+          <div class="bar-value">98.3K</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span class="net-dot dot-ig"></span>IG Reels</div>
+          <div class="bar-track"><div class="bar-fill" style="width:57%;background:var(--ig);"></div></div>
+          <div class="bar-value">56.1K</div>
+        </div>
+        <p class="kpi-note">Facebook video views rose 68% week over week to 98,349. Instagram Reel views eased to 56,135 from 58,117. Video is 45% of all impressions.</p>
+      </div>
+
+      <div class="chart-card">
+        <h3>Engagement Rate by Network</h3>
+        <div class="bar-row">
+          <div class="bar-label"><span class="net-dot dot-ig"></span>Instagram</div>
+          <div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--ig);"></div></div>
+          <div class="bar-value">6.1%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span class="net-dot dot-fb"></span>Facebook</div>
+          <div class="bar-track"><div class="bar-fill" style="width:75%;background:var(--fb);"></div></div>
+          <div class="bar-value">4.6%</div>
+        </div>
+        <p class="kpi-note">Instagram improved from 4.1% to 6.1%. Facebook fell from 17.1% to 4.6% as its reach quadrupled, which is dilution rather than weaker content.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- POSTING EFFICIENCY -->
+  <div class="section">
+    <h2 class="section-title">Where the Posts Are Going</h2>
+    <p class="section-sub">Share of publishing volume against share of engagement, Aug 11 – Aug 17.</p>
+    <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>Network</th>
+          <th>Posts</th>
+          <th>Share of Posts</th>
+          <th>Share of Engagements</th>
+          <th>Engagements per Post</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="net-dot dot-fb"></span>Facebook</td>
+          <td>2</td>
+          <td>22.2%</td>
+          <td>66.8%</td>
+          <td><strong>5,763</strong></td>
+        </tr>
+        <tr>
+          <td><span class="net-dot dot-ig"></span>Instagram</td>
+          <td>7</td>
+          <td>77.8%</td>
+          <td>33.2%</td>
+          <td>820</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <p class="kpi-note" style="margin-top:10px;">Engagements per post rose on both networks, Facebook from 4,844 to 5,763 and Instagram from 435 to 820. With only 2 Facebook posts, a single strong post still moves the whole figure, so read the Facebook row as a signal about that post rather than about the channel.</p>
+  </div>
+
+  <!-- TOP POSTS -->
+  <div class="section">
+    <h2 class="section-title">Post Performance (Instagram Native)</h2>
+    <p class="section-sub">Three posts pulled from native Post and Reel Insights. The two graphics were crossposted to Facebook, so their Views include Facebook activity; the Reel shows no crosspost label.</p>
+    <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>Post</th>
+          <th>Type</th>
+          <th>Views</th>
+          <th>Viewers</th>
+          <th>Likes</th>
+          <th>Comments</th>
+          <th>Shares</th>
+          <th>Saves</th>
+          <th>Follows</th>
+          <th>Profile Visits</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>"God's timing frustrates me sometimes."</td>
+          <td>Static</td>
+          <td><strong>73,350</strong></td>
+          <td>12,730</td>
+          <td class="best">2K</td>
+          <td class="best">40</td>
+          <td class="best">142</td>
+          <td class="best">159</td>
+          <td>5</td>
+          <td class="best">54</td>
+        </tr>
+        <tr>
+          <td>Philippians 3:13 over a cyclist</td>
+          <td>Static</td>
+          <td>24,722</td>
+          <td>4,940</td>
+          <td>460</td>
+          <td>10</td>
+          <td>25</td>
+          <td>19</td>
+          <td>1</td>
+          <td>16</td>
+        </tr>
+        <tr>
+          <td>Hands raised in worship</td>
+          <td>Reel</td>
+          <td>16,356</td>
+          <td>10,612</td>
+          <td>763</td>
+          <td>1</td>
+          <td>34</td>
+          <td>15</td>
+          <td class="best">13</td>
+          <td class="cell-muted">n/a</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+
+    <div class="chart-grid" style="margin-top:20px;">
+      <div class="chart-card">
+        <h3>Share Rate (shares per view)</h3>
+        <div class="bar-row">
+          <div class="bar-label">Worship Reel</div>
+          <div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--green);"></div></div>
+          <div class="bar-value">0.208%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">God's timing</div>
+          <div class="bar-track"><div class="bar-fill" style="width:93%;background:var(--green);"></div></div>
+          <div class="bar-value">0.194%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Philippians</div>
+          <div class="bar-track"><div class="bar-fill" style="width:49%;background:var(--ig);"></div></div>
+          <div class="bar-value">0.101%</div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h3>Follow Rate (follows per view)</h3>
+        <div class="bar-row">
+          <div class="bar-label">Worship Reel</div>
+          <div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--green);"></div></div>
+          <div class="bar-value">0.079%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">God's timing</div>
+          <div class="bar-track"><div class="bar-fill" style="width:9%;background:var(--ig);"></div></div>
+          <div class="bar-value">0.007%</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Philippians</div>
+          <div class="bar-track"><div class="bar-fill" style="width:5%;background:var(--ig);"></div></div>
+          <div class="bar-value">0.004%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="callout" style="margin-top:16px;">
+      <strong>The two-format pattern holds for a third week.</strong> "God's timing frustrates me sometimes" is the strongest distribution post recorded on this account: 142 shares and a 0.217% save rate, higher than the previous best of 0.172%. It reached 73,350 views, three times the Philippians graphic, on the same crossposted setup. Meanwhile the worship Reel reached the least of the three but produced 13 follows against the graphic's 5, converting viewers to followers about eleven times better per view. Vulnerable first-person statements travel. Video converts. Running both is what produced a 2,257 follower week.
+    </div>
+
+    <div class="callout" style="margin-top:14px;">
+      <strong>Data caveat.</strong> Instagram rounds large figures (2K likes), so derived rates for the top post carry a few percent of error. The two graphics are crossposted so their Views include Facebook while Viewers appears to be Instagram only, which is why "God's timing" shows 5.76 views per viewer against the Reel's 1.54; do not read that as repeat viewing. Only 3 of the week's 7 Instagram posts were captured, so this is a sample rather than a ranking.
+    </div>
+  </div>
+
+  <!-- STRATEGIC INSIGHTS -->
+  <div class="section">
+    <h2 class="section-title">Strategic Insights</h2>
+    <div class="insight-grid">
+      <div class="insight-card h-win">
+        <h3>Wins</h3>
+        <ul>
+          <li>Net audience growth reached 2,257, four times last week, with Facebook adding 1,956 from just 2 posts.</li>
+          <li>Impressions rose 59.6% and video views 32.5% on roughly half the posting volume, lifting impressions per post 201.5%.</li>
+          <li>"God's timing frustrates me sometimes" set a new high for shares (142) and save rate (0.217%) on this account.</li>
+        </ul>
+      </div>
+      <div class="insight-card h-opp">
+        <h3>Areas for Improvement</h3>
+        <ul>
+          <li>Engagement rate eased to 5.1% as reach outpaced engagement. Worth watching whether it recovers once this week's spike settles.</li>
+          <li>Link clicks held at 8 in a week that reached 341,782 impressions, so there is a clear opening for a call to action.</li>
+          <li>Instagram Reel views eased slightly to 56,135, and Instagram added 301 followers against Facebook's 1,956.</li>
+        </ul>
+      </div>
+      <div class="insight-card h-action">
+        <h3>Recommended Content Strategy</h3>
+        <ul>
+          <li>Identify the Facebook post behind the spike and rebuild the format. Two posts drove 248,479 impressions and 1,956 followers.</li>
+          <li>Keep the vulnerable first-person statement graphic as a weekly fixture, paired with a Reel for follower conversion.</li>
+          <li>Put a GMHC or Food Pack link in front of this audience now, while 2,257 new followers are arriving and the Sept 20 launch is five weeks out.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="gap-note">
+      <strong>Data status:</strong> Sprout figures cover Aug 11 – Aug 17, 2026, which is 7 complete days from an export labeled Aug 11 – Aug 18. The export's comparison was set to Aug 11 – 18, 2025, so all percentages inside the PDF are year over year; the KPI cards here were recalculated week over week against Aug 4 – Aug 10. Sprout returns no 2025 comparison for Instagram, which suggests that profile was not tracked last August, so year-over-year figures on this account should be treated as unreliable. Sprout's Engagements page and per-profile table agree at 17,263, so no reconciliation was needed. Post-level figures come from native Instagram Post and Reel Insights captured Aug 18; the screens do not show publish dates, and only 3 of the week's 7 Instagram posts were captured. Instagram rounds large figures, and the crossposted graphics count Views across both platforms while Viewers appears Instagram-only. Still needed: (1) a Sprout Post Performance export to rank all 9 posts and identify the Facebook post that drove the spike, (2) a Follower Insights export for demographics, which has still never been pulled for this account, (3) Accounts Reached and Non-Follower Reach at the account level, and (4) Facebook-native Shares and Saves. Sprout excludes Facebook from Audience Gained and Lost, so the daily follower curve reflects Instagram only.
+    </div>
+  </div>
+
+  <footer>Kyle Idleman · Social Performance Dashboard · Aug 11 – Aug 17, 2026</footer>
+
+</div>
+</body>
+</html>
